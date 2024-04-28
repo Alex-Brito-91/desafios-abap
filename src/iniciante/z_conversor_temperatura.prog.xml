@@ -37,14 +37,26 @@
     <item>
      <ID>S</ID>
      <KEY>RB_CEL1</KEY>
-     <ENTRY>Celsius</ENTRY>
-     <LENGTH>15</LENGTH>
+     <ENTRY>Em Celsius</ENTRY>
+     <LENGTH>18</LENGTH>
+    </item>
+    <item>
+     <ID>S</ID>
+     <KEY>RB_CEL2</KEY>
+     <ENTRY>Para Celsius</ENTRY>
+     <LENGTH>20</LENGTH>
     </item>
     <item>
      <ID>S</ID>
      <KEY>RB_FAR1</KEY>
-     <ENTRY>Farenheit</ENTRY>
-     <LENGTH>17</LENGTH>
+     <ENTRY>Em Farenheit</ENTRY>
+     <LENGTH>20</LENGTH>
+    </item>
+    <item>
+     <ID>S</ID>
+     <KEY>RB_FAR2</KEY>
+     <ENTRY>Para Farenheit</ENTRY>
+     <LENGTH>22</LENGTH>
     </item>
    </TPOOL>
   </asx:values>
