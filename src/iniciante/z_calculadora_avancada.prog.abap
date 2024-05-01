@@ -41,8 +41,7 @@ CLASS lcl_calc IMPLEMENTATION.
 
   METHOD calculo_simples.
 
-    IF num1 IS NOT INITIAL AND num2 IS NOT INITIAL.
-      CASE operador_s.
+    CASE operador_s.
       WHEN '1'.
         resultado = num1 + num2.
       WHEN '2'.
@@ -57,10 +56,6 @@ CLASS lcl_calc IMPLEMENTATION.
           resultado = num1 / num2.
         ENDIF.
     ENDCASE.
-    ELSE.
-      WRITE: 'Insira dois valores para o cálculo ser realizado!'.
-      EXIT.
-    ENDIF.
 
     WRITE: / 'Resultado:', resultado.
 
@@ -96,8 +91,11 @@ CLASS lcl_calc IMPLEMENTATION.
       me->calculo_simples( ).
     ELSEIF operador_a IS NOT INITIAL AND operador_s EQ 0.
       me->calculo_avancado( ).
+    ELSEIF operador_s IS INITIAL AND operador_a IS INITIAL.
+      WRITE: 'Escolha um operador!'.
+      EXIT.
     ELSE.
-      WRITE: 'Escolha apenas uma operação!'.
+      WRITE: 'Escolha apenas um operador!'.
       EXIT.
     ENDIF.
 
