@@ -23,15 +23,14 @@ CLASS alv_color DEFINITION.
             END OF ty_sflight.
 
     DATA:  it_sflight TYPE TABLE OF ty_sflight,
-           st_sflight TYPE ty_sflight.
+           st_sflight TYPE ty_sflight,
 
-    DATA: it_fieldcat TYPE slis_t_fieldcat_alv,
-          st_layout   TYPE slis_layout_alv.
+           lo_alv     TYPE REF TO cl_salv_table,
+           lo_columns TYPE REF TO cl_salv_columns_table,
+           lo_col     TYPE REF TO cl_salv_column_list.
 
     METHODS: select_data,
              alv_color,
-             merge_alv,
-             layout_alv,
              alv_display,
              run.
 
@@ -82,47 +81,26 @@ CLASS alv_color IMPLEMENTATION.
       <fs_sflight>-color = coltab.
       MODIFY it_sflight FROM <fs_sflight>.
 
-      lv_percent = 0.
+      CLEAR lv_percent.
       CLEAR coltab.
 
     ENDLOOP.
 
   ENDMETHOD.
 
-  METHOD merge_alv.
-
-    CALL FUNCTION 'REUSE_ALV_FIELDCATALOG_MERGE'
-      EXPORTING
-        i_program_name         = sy-repid
-        i_structure_name       = 'ZST_SFLIGHT'
-
-      CHANGING
-        ct_fieldcat            = it_fieldcat
-      EXCEPTIONS
-        inconsistent_interface = 1
-        program_error          = 2.
-
-  ENDMETHOD.
-
-  METHOD layout_alv.
-
-    st_layout-zebra = 'X'.
-    st_layout-colwidth_optimize = 'X'.
-    st_layout-coltab_fieldname = 'COLOR'.
-
-  ENDMETHOD.
-
   METHOD alv_display.
 
-    CALL FUNCTION 'REUSE_ALV_GRID_DISPLAY'
-      EXPORTING
-        i_callback_program = sy-repid
-        is_layout          = st_layout
-        it_fieldcat        = it_fieldcat
-      TABLES
-        t_outtab           = it_sflight
-      EXCEPTIONS
-        program_error      = 1.
+    CALL METHOD cl_salv_table=>factory
+     IMPORTING
+      r_salv_table = lo_alv
+     CHANGING
+    t_table = it_sflight.
+
+    lo_columns = lo_alv->get_columns( ).
+    lo_col ?= lo_columns->get_column( 'SEATSOCC' ).
+    lo_columns->set_color_column( 'COLOR' ).
+
+    lo_alv->display( ).
 
   ENDMETHOD.
 
@@ -130,8 +108,6 @@ CLASS alv_color IMPLEMENTATION.
 
     me->select_data( ).
     me->alv_color( ).
-    me->merge_alv( ).
-    me->layout_alv( ).
     me->alv_display( ).
 
   ENDMETHOD.
