@@ -25,21 +25,20 @@ lt_students = VALUE #(
   ( id = 8 name = `Gabriel` discipline = `Geography`  note = 1 )
 ).
 
-DATA: lv_notas_loop   TYPE i,
-      lv_notas_reduce TYPE i,
-      lv_media        TYPE i.
+DATA: lv_soma_loop   TYPE i,
+      lv_soma_reduce TYPE i,
+      lv_media       TYPE i.
 
 LOOP AT lt_students ASSIGNING FIELD-SYMBOL(<fs_students>).
-  lv_notas_loop += <fs_students>-note.
+  lv_soma_loop += <fs_students>-note.
 ENDLOOP.
-
-lv_media = lv_notas_loop / LINES( lt_students ).
+lv_media = lv_soma_loop / LINES( lt_students ).
 WRITE: / `Média dos Alunos com Loop:`, lv_media.
 
 CLEAR lv_media.
 
-lv_notas_reduce = REDUCE i( INIT lv_soma TYPE i
-                            FOR wa IN lt_students
-                            NEXT lv_soma = lv_soma + wa-note ).
-lv_media = lv_notas_reduce / LINES( lt_students ).
+lv_soma_reduce = REDUCE i( INIT lv_soma TYPE i
+                           FOR wa IN lt_students
+                           NEXT lv_soma = lv_soma + wa-note ).
+lv_media = lv_soma_reduce / LINES( lt_students ).
 WRITE: / `Média dos Alunos com Reduce:`, lv_media.
