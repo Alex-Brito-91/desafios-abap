@@ -10,9 +10,7 @@ TYPES: BEGIN OF tt_values,
        END OF tt_values.
 
 DATA: lt_values        TYPE TABLE OF tt_values,
-      ls_values        TYPE tt_values,
-      lt_unique_values TYPE TABLE OF tt_values,
-      ls_unique_values TYPE tt_values.
+      lt_unique_values TYPE TABLE OF tt_values.
 
 lt_values = VALUE #(
   ( field = 'A' )
@@ -31,7 +29,7 @@ MOVE-CORRESPONDING lt_values TO lt_unique_values.
 
 DATA(contador) = 1.
 
-LOOP AT lt_unique_values INTO ls_unique_values.
+LOOP AT lt_unique_values INTO DATA(ls_unique_values).
 
   DATA(valor_atual)   = lt_unique_values[ contador ].
   DATA(proximo_valor) = lt_unique_values[ contador + 1 ].
@@ -47,6 +45,6 @@ LOOP AT lt_unique_values INTO ls_unique_values.
 ENDLOOP.
 
 WRITE: / `Valores Únicos da Lista com SORT:`.
-LOOP AT lt_unique_values INTO DATA(ls_unique).
-  WRITE: ls_unique-field.
+LOOP AT lt_unique_values INTO ls_unique_values.
+  WRITE: ls_unique_values-field.
 ENDLOOP.
