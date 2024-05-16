@@ -23,6 +23,7 @@ lt_values = VALUE #(
   ( field = 'F' )
 ).
 
+* Solução Usando Ordenação SORT
 SORT lt_values.
 
 MOVE-CORRESPONDING lt_values TO lt_unique_values.
@@ -44,7 +45,36 @@ LOOP AT lt_unique_values INTO DATA(ls_unique_values).
 
 ENDLOOP.
 
-WRITE: / `Valores Únicos da Lista com SORT:`.
+WRITE: / `Valores Únicos com SORT:`.
 LOOP AT lt_unique_values INTO ls_unique_values.
   WRITE: ls_unique_values-field.
+ENDLOOP.
+
+* Solução Usando SELECT COUNT
+SELECT field, COUNT(*) AS qtd
+  FROM @lt_values AS values
+  GROUP BY field
+  INTO TABLE @DATA(lt_unique).
+DELETE lt_unique WHERE qtd GT 1.
+
+WRITE: / `Valores Únicos com SELECT COUNT:`.
+LOOP AT lt_unique INTO DATA(ls_unique).
+  WRITE: ls_unique-field.
+ENDLOOP.
+
+* Solução Usando Loop com Controlador
+TYPES: BEGIN OF tt_values_unique,
+        field TYPE c,
+        qtd   TYPE i,
+       END OF tt_values_unique.
+DATA: lt_values_unique TYPE TABLE OF tt_values_unique.
+
+LOOP AT lt_values INTO DATA(ls_values).
+  COLLECT VALUE tt_values_unique( field = ls_values-field qtd = 1 ) INTO lt_values_unique.
+ENDLOOP.
+DELETE lt_values_unique WHERE qtd GT 1.
+
+WRITE: / `Valores Únicos com LOOP:`.
+LOOP AT lt_values_unique INTO DATA(ls_values_unique).
+  WRITE: ls_values_unique-field.
 ENDLOOP.
