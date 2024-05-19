@@ -29,8 +29,8 @@ MOVE-CORRESPONDING lt_values TO lt_unique_values.
 DATA(contador) = sy-tabix.
 
 DO LINES( lt_unique_values ) TIMES.
-  IF contador LT LINES( lt_unique_values ) AND lt_unique_values[ contador ] EQ lt_unique_values[ contador + 1 ].
-    DELETE: lt_unique_values WHERE field EQ lt_unique_values[ contador ].
+  IF contador < LINES( lt_unique_values ) AND lt_unique_values[ contador ] EQ lt_unique_values[ contador + 1 ].
+    DELETE lt_unique_values WHERE field EQ lt_unique_values[ contador ].
     contador = sy-tabix.
   ELSE.
     contador += 1.
@@ -44,10 +44,10 @@ ENDLOOP.
 
 * Solução Usando SELECT COUNT
 SELECT field, COUNT( * ) AS qtd
-FROM @lt_values AS values
-GROUP BY field
-INTO TABLE @DATA(lt_unique).
-DELETE lt_unique WHERE qtd GT 1.
+  FROM @lt_values AS values
+  GROUP BY field
+  INTO TABLE @DATA(lt_unique).
+DELETE lt_unique WHERE qtd > 1.
 
 WRITE: / `Valores Únicos Usando SELECT:`.
 LOOP AT lt_unique INTO DATA(ls_unique).
@@ -55,18 +55,18 @@ LOOP AT lt_unique INTO DATA(ls_unique).
 ENDLOOP.
 
 * Solução Usando Loop com Controlador
-TYPES: BEGIN OF tt_value_unique,
+TYPES: BEGIN OF tt_values_unique,
         field TYPE c,
         qtd   TYPE i,
-       END OF tt_value_unique.
-DATA: lt_value_unique TYPE TABLE OF tt_value_unique.
+       END OF tt_values_unique.
+DATA: lt_values_unique TYPE TABLE OF tt_values_unique.
 
 LOOP AT lt_values INTO DATA(ls_values).
-  COLLECT VALUE tt_value_unique( field = ls_values-field qtd = 1 ) INTO lt_value_unique.
+  COLLECT VALUE tt_values_unique( field = ls_values-field qtd = 1 ) INTO lt_values_unique.
 ENDLOOP.
-DELETE lt_value_unique WHERE qtd GT 1.
+DELETE lt_values_unique WHERE qtd > 1.
 
-WRITE: / `Valores Únicos Usando Loop:`.
-LOOP AT lt_value_unique INTO DATA(ls_value_unique).
-  WRITE: ls_value_unique-field.
+WRITE: / `Valores Únicos Usando LOOP:`.
+LOOP AT lt_values_unique INTO DATA(ls_values_unique).
+  WRITE: ls_values_unique-field.
 ENDLOOP.
