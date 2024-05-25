@@ -31,7 +31,7 @@ LOOP AT lt_students INTO DATA(ls_students).
   IF lt_students_sorted[] IS INITIAL.
     APPEND ls_students TO lt_students_sorted.
     DATA(nota_atual) = ls_students-note.
-  ELSEIF ls_students-note < nota_atual.
+  ELSEIF ls_students-note <= nota_atual.
     APPEND ls_students TO lt_students_sorted.
     nota_atual = ls_students-note.
   ELSE.
@@ -43,5 +43,5 @@ LOOP AT lt_students INTO DATA(ls_students).
 ENDLOOP.
 
 LOOP AT lt_students_sorted INTO ls_students_sorted.
-  WRITE: / `Nota:`, ls_students_sorted-note, `- Aluno:`, ls_students_sorted-name.
+  WRITE: / `Nota:`, ls_students_sorted-note, '- Aluno:', ls_students_sorted-name.
 ENDLOOP.
